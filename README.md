@@ -34,15 +34,6 @@ An end-to-end quantitative financial analytics pipeline and tactical trading sim
 * **Protected Capital Days:** **3,000 days** where the strategy successfully predicted down market trends and moved portfolio allocations into a 0% change cash shield.
 * **Asset Peak Performance:** Isolated a peak individual asset hit-rate of **54.27% on Nvidia (NVDA)**.
 
----
-
-## 📁 Repository Directory
-```text
-├── 📁 01_Machine_Learning/        # Jupyter Notebook (NLP + Model Experimentation) & saved .pkl files
-├── 📁 02_Database_Warehouse/      # PostgreSQL schemas, CTE queries, and window function scripts
-├── 📁 03_Business_Intelligence/   # Saved 2-page interactive Power BI Desktop (.pbix) framework
-└── 📁 04_Software_Deployment/     # Python script (app.py) powering the hosted Streamlit interface
-```
 
 ---
 
@@ -52,3 +43,7 @@ An end-to-end quantitative financial analytics pipeline and tactical trading sim
 pip install streamlit scikit-learn pandas numpy
 streamlit run 04_Software_Deployment/app.py
 ```
+
+Author
+**Pooja Dhamale**
+
