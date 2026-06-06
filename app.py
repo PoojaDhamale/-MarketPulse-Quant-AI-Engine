@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Premium fintech dark-terminal CSS injection
+
 st.markdown("""
     <style>
     .main { background-color: #0b132b; color: #ffffff; }
@@ -33,7 +33,7 @@ st.markdown("""
 # ==========================================
 # 2. RELATIVE PRODUCTION FILE ENGINE (FIXED FOR CLOUD)
 # ==========================================
-# This automatically finds the files inside your GitHub repo folder on any server
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LR_MODEL_PATH = os.path.join(BASE_DIR, "lr_baseline_model.pkl")
@@ -69,7 +69,7 @@ selected_stock = st.sidebar.selectbox(
     ["NVDA", "AAPL", "MSFT", "TSLA", "JPM", "GS", "XOM", "CVX", "JNJ", "PFE"]
 )
 
-# Automated sector matching to preserve data framework logic
+
 sector_mapping = {
     "NVDA": "Technology", "AAPL": "Technology", "MSFT": "Technology", "TSLA": "Consumer Cyclical",
     "JPM": "Financials", "GS": "Financials", "XOM": "Energy", "CVX": "Energy",
@@ -80,7 +80,7 @@ selected_sector = sector_mapping[selected_stock]
 st.sidebar.info(f"**Asset Profile:**\n* Ticker: **{selected_stock}**\n* Sector: **{selected_sector}**")
 st.sidebar.markdown("---")
 
-# Model strategy layer architecture selection toggle
+
 selected_strategy = st.sidebar.radio(
     "Select Pipeline Configuration:",
     ["Technical-Only Baseline (Logistic Regression)", "Technical + Sentiment (Random Forest)"]
@@ -101,7 +101,7 @@ if pipeline is not None:
     # ==========================================
     # 5. DYNAMIC HISTORICAL RANGE CONSTRAINTS
     # ==========================================
-    # Enforces feature constraints mapped to the true historical data distributions
+   
     col1, col2 = st.columns(2)
 
     with col1:
@@ -127,7 +127,7 @@ if pipeline is not None:
             step=0.01
         )
         
-        # Real-time dashboard contextual status updates matching your Power BI view
+        
         if sentiment_score < -0.1:
             st.error("⚠️ Prevailing News Regime: **SYSTEMIC PANIC CRISIS**")
         elif sentiment_score > 0.1:
