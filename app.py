@@ -4,9 +4,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-# ==========================================
-# 1. PAGE CONFIGURATION & THEME
-# ==========================================
+# Configure the quantitative terminal application window
 st.set_page_config(
     page_title="MarketPulse AI Terminal",
     page_icon="📊",
@@ -14,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Premium fintech dark-terminal CSS injection
+# Custom UI engine configuration to apply a dark-themed terminal container
 st.markdown("""
     <style>
     .main { background-color: #0b132b; color: #ffffff; }
@@ -27,143 +25,118 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# 2. CACHED PRODUCTION FILE ENGINE
-# ==========================================
-# ==========================================
-# 2. RELATIVE PRODUCTION FILE ENGINE (FIXED FOR CLOUD)
-# ==========================================
-# This automatically finds the files inside your GitHub repo folder on any server
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Resolve system file directories dynamically for cloud and local deployments
+base_workspace_dir = os.path.dirname(os.path.abspath(__file__))
 
-LR_MODEL_PATH = os.path.join(BASE_DIR, "lr_baseline_model.pkl")
-RF_MODEL_PATH = os.path.join(BASE_DIR, "rf_sentiment_model.pkl")
-SCALER_TECH_PATH = os.path.join(BASE_DIR, "scaler_tech.pkl")
-SCALER_SENT_PATH = os.path.join(BASE_DIR, "scaler_sentiment.pkl")
+path_lr = os.path.join(base_workspace_dir, "lr_baseline_model.pkl")
+path_rf = os.path.join(base_workspace_dir, "rf_sentiment_model.pkl")
+path_scaler_tech = os.path.join(base_workspace_dir, "scaler_tech.pkl")
+path_scaler_sent = os.path.join(base_workspace_dir, "scaler_sentiment.pkl")
 
 @st.cache_resource
-def load_production_pipeline_assets():
+def load_quant_pipeline_assets():
+    """Loads and caches serialized pipeline components from the local repo root."""
     assets = {}
-    paths = {
-        "lr_model": LR_MODEL_PATH, "rf_model": RF_MODEL_PATH,
-        "scaler_tech": SCALER_TECH_PATH, "scaler_sent": SCALER_SENT_PATH
+    resource_registry = {
+        "lr_model": path_lr, "rf_model": path_rf,
+        "scaler_tech": path_scaler_tech, "scaler_sent": path_scaler_sent
     }
-    for key, path in paths.items():
-        if not os.path.exists(path):
-            st.error(f"❌ Missing critical file asset: `{path}`")
+    
+    for feature_key, target_path in resource_registry.items():
+        # Adaptive file lookup to handle root directory mapping changes on cloud servers
+        resolved_path = target_path if os.path.exists(target_path) else os.path.basename(target_path)
+        
+        if not os.path.exists(resolved_path):
+            st.error(f"Missing core pipeline dependency: {os.path.basename(target_path)}")
             return None
-        with open(path, "rb") as f:
-            assets[key] = pickle.load(f)
+        with open(resolved_path, "rb") as data_stream:
+            assets[feature_key] = pickle.load(data_stream)
     return assets
 
-pipeline = load_production_pipeline_assets()
+pipeline = load_quant_pipeline_assets()
 
-# ==========================================
-# 3. INTERACTIVE SIDEBAR CONFIGURATOR
-# ==========================================
-st.sidebar.title("🛠️ Asset Selector Panel")
+# Build interactive sidebar profile pane
+st.sidebar.title("Asset Configuration")
 st.sidebar.markdown("---")
 
 selected_stock = st.sidebar.selectbox(
-    "Select Target Equity:",
+    "Select Target Stock Ticker:",
     ["NVDA", "AAPL", "MSFT", "TSLA", "JPM", "GS", "XOM", "CVX", "JNJ", "PFE"]
 )
 
-# Automated sector matching to preserve data framework logic
-sector_mapping = {
+# Operational sector pairings matching underlying relational database layouts
+sector_map = {
     "NVDA": "Technology", "AAPL": "Technology", "MSFT": "Technology", "TSLA": "Consumer Cyclical",
     "JPM": "Financials", "GS": "Financials", "XOM": "Energy", "CVX": "Energy",
     "JNJ": "Healthcare", "PFE": "Healthcare"
 }
-selected_sector = sector_mapping[selected_stock]
+selected_sector = sector_map[selected_stock]
 
 st.sidebar.info(f"**Asset Profile:**\n* Ticker: **{selected_stock}**\n* Sector: **{selected_sector}**")
 st.sidebar.markdown("---")
 
-# Model strategy layer architecture selection toggle
 selected_strategy = st.sidebar.radio(
-    "Select Pipeline Configuration:",
+    "Select Model Structure:",
     ["Technical-Only Baseline (Logistic Regression)", "Technical + Sentiment (Random Forest)"]
 )
 
 st.sidebar.markdown("---")
-st.sidebar.caption("MarketPulse Engine v1.1 | Out-of-Sample Validation Terminal")
+st.sidebar.caption("MarketPulse Engine v1.1 | Production Terminal")
 
-# ==========================================
-# 4. EXECUTIVE CANVAS HEADERS
-# ==========================================
+# Main user canvas headers
 st.title("📊 MarketPulse: Market Sentiment & Trading Report")
-st.subheader("Interactive Machine Learning Scenario Arena")
-st.write("Adjust the technical indicators and macro sentiment vectors to stress-test your quantitative strategy boundaries in real time.")
+st.write("Adjust the micro-technical sliders and macro sentiment inputs below to evaluate real-time equity trend direction probabilities.")
 st.markdown("---")
 
 if pipeline is not None:
-    # ==========================================
-    # 5. DYNAMIC HISTORICAL RANGE CONSTRAINTS
-    # ==========================================
-    # Enforces feature constraints mapped to the true historical data distributions
-    col1, col2 = st.columns(2)
+    # Setup interactive scenario boundaries
+    left_column, right_column = st.columns(2)
 
-    with col1:
-        st.markdown("### 📈 Micro-Technical Performance Metrics")
-        
-        # Sliders configured to accurately trace true historical price boundaries
-        volume = st.slider("Daily Trading Volume", min_value=100000, max_value=150000000, value=35000000, step=100000)
-        price_range = st.slider("Intraday Volatility Range (High - Low)", min_value=0.05, max_value=55.0, value=4.20, step=0.05)
-        ma_7 = st.slider("Short-Term Trend Filter (7-Day Moving Average)", min_value=5.0, max_value=480.0, value=165.0, step=0.5)
-        ma_30 = st.slider("Long-Term Trend Filter (30-Day Moving Average)", min_value=5.0, max_value=480.0, value=160.0, step=0.5)
-        volatility_7 = st.slider("7-Day Historical Price Volatility Index", min_value=0.005, max_value=0.150, value=0.028, step=0.001)
+    with left_column:
+        st.markdown("### Technical Market Indicators")
+        volume = st.slider("Daily Volume Log", min_value=100000, max_value=150000000, value=35000000, step=100000)
+        price_range = st.slider("Intraday Volatility Spread (High - Low)", min_value=0.05, max_value=55.0, value=4.20, step=0.05)
+        ma_7 = st.slider("7-Day Moving Average Filter", min_value=5.0, max_value=480.0, value=165.0, step=0.5)
+        ma_30 = st.slider("30-Day Moving Average Filter", min_value=5.0, max_value=480.0, value=160.0, step=0.5)
+        volatility_7 = st.slider("7-Day Rolling Historical Volatility Index", min_value=0.005, max_value=0.150, value=0.028, step=0.001)
 
-
-    with col2:
-        st.markdown("### 📰 Top-Down Macro-Sentiment Vector")
-        st.write("Modify the macro component below to analyze directional trajectory flips under changing news environments.")
+    with right_column:
+        st.markdown("### Broad Macro Sentiment Parameter")
+        st.write("Simulate changing text news headline weights compiled via broad market index data feeds.")
         
-        sentiment_score = st.slider(
-            "VADER Text Sentiment Index Score", 
-            min_value=-1.00, 
-            max_value=1.00, 
-            value=0.03, 
-            step=0.01
-        )
+        sentiment_score = st.slider("VADER Compound Sentiment Score", min_value=-1.00, max_value=1.00, value=0.03, step=0.01)
         
-        # Real-time dashboard contextual status updates matching your Power BI view
         if sentiment_score < -0.1:
-            st.error("⚠️ Prevailing News Regime: **SYSTEMIC PANIC CRISIS**")
+            st.error("Current Regime: **SYSTEMIC PANIC CRISIS**")
         elif sentiment_score > 0.1:
-            st.success("✅ Prevailing News Regime: **POSITIVE BULLISH HYPE**")
+            st.success("Current Regime: **POSITIVE BULLISH HYPE**")
         else:
-            st.info("ℹ️ Prevailing News Regime: **NEUTRAL CONSOLIDATION**")
+            st.info("Current Regime: **NEUTRAL CONSOLIDATION**")
 
         st.markdown("<br><br>", unsafe_allow_html=True)
-        st.markdown("### 🎛️ Execution Core")
+        st.markdown("### Allocation Execution")
         predict_button = st.button("RUN QUANT ALGORITHMIC PREDICTION ENGINE")
 
-    # ==========================================
-    # 6. PIPELINE INFERENCE & STATISTICAL OUTPUT DISPLAY
-    # ==========================================
+    # Ingestion tracking and inference execution
     st.markdown("---")
     
     if predict_button:
-        # Initialize conditional prediction parameters
         if selected_strategy == "Technical-Only Baseline (Logistic Regression)":
-            # Baseline uses technical variables only (5 features)
-            raw_inputs = np.array([[volume, price_range, ma_7, ma_30, volatility_7]])
-            scaled_inputs = pipeline["scaler_tech"].transform(raw_inputs)
-            prediction = pipeline["lr_model"].predict(scaled_inputs)[0]
-            probabilities = pipeline["lr_model"].predict_proba(scaled_inputs)[0]
+            raw_features = np.array([[volume, price_range, ma_7, ma_30, volatility_7]])
+            scaled_features = pipeline["scaler_tech"].transform(raw_features)
+            prediction = pipeline["lr_model"].predict(scaled_features)[0]
+            probabilities = pipeline["lr_model"].predict_proba(scaled_features)[0]
             model_name = "Logistic Regression Baseline"
         else:
-            # Champion setup maps all 6 features including sentiment arrays
-            raw_inputs = np.array([[volume, price_range, ma_7, ma_30, volatility_7, sentiment_score]])
-            scaled_inputs = pipeline["scaler_sent"].transform(raw_inputs)
-            prediction = pipeline["rf_model"].predict(scaled_inputs)[0]
-            probabilities = pipeline["rf_model"].predict_proba(scaled_inputs)[0]
+            raw_features = np.array([[volume, price_range, ma_7, ma_30, volatility_7, sentiment_score]])
+            scaled_features = pipeline["scaler_sent"].transform(raw_features)
+            prediction = pipeline["rf_model"].predict(scaled_features)[0]
+            probabilities = pipeline["rf_model"].predict_proba(scaled_features)[0]
             model_name = "Random Forest Champion"
 
-        st.markdown("### 🚀 Real-Time Tactical Capital Signal")
+        st.markdown("### Tactical Strategy Allocation Signal")
         
-        # Generate clean visual notification panels matching your layout colors
+        # Deploy clear visual output alert modules
         if prediction == 1:
             confidence = probabilities[1] * 100
             st.markdown(f"""
@@ -181,9 +154,9 @@ if pipeline is not None:
                 <div class='prediction-box-down'>
                     <h2 style='color:#e74c3c; margin:0;'>🟥 STRATEGY TARGET DIRECTION: DOWN SIGNAL (0)</h2>
                     <p style='font-size:18px; margin:10px 0 0 0;'>
-                        The <b>{model_name}</b> predicts a negative or flat session for <b>{selected_stock}</b>. 
-                        Confidence metrics signature: <b>{confidence:.2f}%</b>.<br>
-                        <b>Tactical Risk Filter Active: Move portfolio allocation to Cash (0% Capital Preservation Shield).</b>
+                        The <b>{model_name}</b> outlines a negative or flat performance trajectory for <b>{selected_stock}</b>. 
+                        Confidence metric profile: <b>{confidence:.2f}%</b>.<br>
+                        <b>Tactical Risk Strategy Active: Reallocate portfolio exposure to Cash (0% Capital Preservation Shield).</b>
                     </p>
                 </div>
             """, unsafe_allow_html=True)
