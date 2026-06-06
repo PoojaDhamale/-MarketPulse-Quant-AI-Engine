@@ -37,12 +37,6 @@ An end-to-end quantitative financial analytics pipeline and tactical trading sim
 
 ---
 
-## ⚙️ Quick Start Local Setup
-```bash
-# 1. Launch the interactive frontend web server
-pip install streamlit scikit-learn pandas numpy
-streamlit run 04_Software_Deployment/app.py
-```
 
 Author
 **Pooja Dhamale**
