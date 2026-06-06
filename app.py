@@ -30,11 +30,17 @@ st.markdown("""
 # ==========================================
 # 2. CACHED PRODUCTION FILE ENGINE
 # ==========================================
-BASE_DIR = r"C:\Users\dhama\Desktop\MarketPulse_NLP"
+# ==========================================
+# 2. RELATIVE PRODUCTION FILE ENGINE (FIXED FOR CLOUD)
+# ==========================================
+# This automatically finds the files inside your GitHub repo folder on any server
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 LR_MODEL_PATH = os.path.join(BASE_DIR, "lr_baseline_model.pkl")
 RF_MODEL_PATH = os.path.join(BASE_DIR, "rf_sentiment_model.pkl")
 SCALER_TECH_PATH = os.path.join(BASE_DIR, "scaler_tech.pkl")
 SCALER_SENT_PATH = os.path.join(BASE_DIR, "scaler_sentiment.pkl")
+
 
 @st.cache_resource
 def load_production_pipeline_assets():
