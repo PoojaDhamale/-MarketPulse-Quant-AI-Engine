@@ -1,7 +1,7 @@
 # MarketPulse: Macro-Sentiment & Equity AI Engine 📊
 An end-to-end quantitative financial analytics pipeline and tactical trading simulation.
 
-[Live Web Demo](YOUR_STREAMLIT_LINK) | [Power BI Dashboard](YOUR_GITHUB_LINK_TO_PBIX) | [SQL Database Schema](YOUR_GITHUB_LINK_TO_SQL)
+[Live Web Demo](YOUR_STREAMLIT_LINK) 
 
 ---
 
