@@ -41,7 +41,6 @@ RF_MODEL_PATH = os.path.join(BASE_DIR, "rf_sentiment_model.pkl")
 SCALER_TECH_PATH = os.path.join(BASE_DIR, "scaler_tech.pkl")
 SCALER_SENT_PATH = os.path.join(BASE_DIR, "scaler_sentiment.pkl")
 
-
 @st.cache_resource
 def load_production_pipeline_assets():
     assets = {}
@@ -110,10 +109,11 @@ if pipeline is not None:
         
         # Sliders configured to accurately trace true historical price boundaries
         volume = st.slider("Daily Trading Volume", min_value=100000, max_value=150000000, value=35000000, step=100000)
-        price_range = st.slider("Intraday Volatility Range (High - Low)", min_value=0.05, max_value=25.0, value=4.20, step=0.05)
+        price_range = st.slider("Intraday Volatility Range (High - Low)", min_value=0.05, max_value=55.0, value=4.20, step=0.05)
         ma_7 = st.slider("Short-Term Trend Filter (7-Day Moving Average)", min_value=5.0, max_value=480.0, value=165.0, step=0.5)
         ma_30 = st.slider("Long-Term Trend Filter (30-Day Moving Average)", min_value=5.0, max_value=480.0, value=160.0, step=0.5)
-        volatility_7 = st.slider("7-Day Historical Price Volatility Index", min_value=0.005, max_value=0.120, value=0.028, step=0.001)
+        volatility_7 = st.slider("7-Day Historical Price Volatility Index", min_value=0.005, max_value=0.150, value=0.028, step=0.001)
+
 
     with col2:
         st.markdown("### 📰 Top-Down Macro-Sentiment Vector")
