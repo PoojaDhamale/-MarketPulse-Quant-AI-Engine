@@ -55,5 +55,3 @@ During the explosive, single-direction linear breakout regime of early 2024, ind
 *   **Streamlit Web App:** Deployed an interactive click-to-predict frontend application (`app.py`) that loads the serialized model pickles, fits inputs against training `StandardScaler` profiles live, and flashes real-time green buy parameters or red cash preservation signals.
 
 
-**Pooja Dhamale**
-
